@@ -105,12 +105,13 @@ class ContactData extends Component {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
         const order = {
+            userId: this.props.userId,
             ingredients: this.props.ings,
             price: this.props.price,
             orderData: formData
         }
 
-        this.props.onBurgerOrder(order);
+        this.props.onBurgerOrder(order, this.props.token);
     }
 
     checkValidity(value, rules) {
@@ -187,9 +188,11 @@ class ContactData extends Component {
                 <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
         );
+
         if ( this.props.loading ) {
             form = <Spinner />;
         }
+
         return (
             <div className={classes.ContactData}>
                 <h4>Enter your Contact Data</h4>
@@ -203,13 +206,15 @@ const mapStateToProps = state => {
     return {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 };
 
 const mapDispatchtoProps = dispatch => {
     return {
-        onBurgerOrder: (orderData) => dispatch(actions.purchaseBurger(orderData))
+        onBurgerOrder: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
     }
 }
 
