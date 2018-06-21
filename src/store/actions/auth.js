@@ -23,9 +23,6 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expirationDate');
-    localStorage.removeItem('userId');
     return {
         type: actionTypes.AUTH_LOGOUT
     };
@@ -56,8 +53,6 @@ export const auth = (email, password, isSignup) => {
 
         axios.post(url, authData)
             .then(res => {
-                console.log('auth success:');
-                console.log(res);
                 const expirationDate = new Date(new Date().getTime() + res.data.expiresIn * 1000);
                 localStorage.setItem('token', res.data.idToken);
                 localStorage.setItem('expirationDate', expirationDate);
@@ -66,8 +61,6 @@ export const auth = (email, password, isSignup) => {
                 dispatch(checkAuthTimeout(res.data.expiresIn));
             })
             .catch(err => {
-                console.log('auth error:');
-                console.log(err.response.data);
                 dispatch(authFail(err.response.data.error));
             });
     };
